@@ -6,7 +6,7 @@ import Sql from 'sql';
 import Access from './access';
 
 class Collection {
-  constructor({ name, table, joins, validate, access, ...options }) {
+  constructor({ name, columns, table, joins, validate, access, ...options }) {
 
     _.defaults(options, {
       id: true,
@@ -15,6 +15,10 @@ class Collection {
 
     this.name = name;
     this.hooks = {};
+
+    if (!table && columns) {
+      table = {columns};
+    }
 
     if (options.id) {
       table.columns.unshift({
