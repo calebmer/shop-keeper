@@ -1,6 +1,6 @@
 {
   "name": "shop-keeper",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "The API logic should be the least of your concerns, focus on your data and your front end",
   "author": "Caleb Meredith <calebmeredith8@gmail.com> (http://calebmer.github.io)",
   "license": "MIT",

@@ -15,11 +15,6 @@ class Collection {
 
     this.name = name;
     this.hooks = {};
-    this.validator = new Validator(validate || {});
-    this.joins = [];
-    (joins || []).forEach(::this.addJoin);
-    access.terse.unshift('id');
-    this.access = new Access(access || {});
 
     if (options.id) {
       table.columns.unshift({
@@ -57,6 +52,11 @@ class Collection {
     }
 
     this.table = Sql.define(_.defaults(table, {name}));
+    this.validator = new Validator(validate || {});
+    this.joins = [];
+    (joins || []).forEach(::this.addJoin);
+    access.terse.unshift('id');
+    this.access = new Access(access || {});
   }
   addJoin(join) {
     // TODO: test this
