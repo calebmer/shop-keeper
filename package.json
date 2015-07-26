@@ -1,0 +1,39 @@
+{
+  "name": "shop-keeper",
+  "version": "1.0.0",
+  "description": "The API logic should be the least of your concerns, focus on your data and your front end",
+  "author": "Caleb Meredith <calebmeredith8@gmail.com> (http://calebmer.github.io)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/calebmer/shop-keeper.git"
+  },
+  "keywords": [
+    "shop",
+    "keeper",
+    "api",
+    "rest",
+    "data"
+  ],
+  "main": "lib/index.js",
+  "scripts": {
+    "prepublish": "bin/build.sh",
+    "test": "bin/build.sh && bin/test.sh"
+  },
+  "dependencies": {
+    "async": "^1.4.0",
+    "body-parser": "^1.13.2",
+    "lodash": "^3.10.0",
+    "pluralize": "^1.1.2",
+    "sql": "^0.55.0"
+  },
+  "devDependencies": {
+    "babel": "^5.8.3",
+    "coffee-script": "^1.9.3",
+    "express": "^4.13.1",
+    "mocha": "^2.2.5",
+    "should": "^7.0.2",
+    "sqlite3": "^3.0.9",
+    "supertest": "^1.0.1"
+  }
+}

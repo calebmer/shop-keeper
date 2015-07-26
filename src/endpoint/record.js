@@ -1,0 +1,152 @@
+import _ from 'lodash';
+import Async from 'async';
+import { selectJoins, denormalizeExec } from '../query';
+import Endpoint from './endpoint';
+
+class RecordEndpoint extends Endpoint {
+  constructor(collection) { super(collection); }
+  getRecordId({recordId}, callback) { return callback(null, recordId); }
+  before(req, res, next) {
+
+    let {table} = this.collection;
+    let recordId;
+
+    Async.waterfall([
+      done => this.getRecordId(req, done),
+      (theRecordId, done) => {
+
+        recordId = theRecordId;
+        req.recordId = recordId;
+        done();
+      },
+
+      done => table
+        .select(table.id)
+        .where(table.id.equals(recordId))
+        .limit(1)
+        .exec((error, [record]) => {
+
+          if (error) { return done(error); }
+          if (!record) { return done(_.extend(new Error('Record not found'), { statusCode: 404 })); }
+          // TODO: res.writeHead({ 'Record-Id': recordId });
+          done();
+        })
+    ], next);
+  }
+  ensureAccountability(req, next) {
+
+    let { access, table } = this.collection;
+    let { body, recordId, accountableId } = req;
+
+    Async.waterfall([
+      done => access.isAccountable(accountableId || -1, recordId, table, done),
+      (isAccountable, done) => {
+
+        if (!isAccountable) {
+          return done(_.extend(new Error('Not authorized to make request'), { statusCode: 401 }));
+        }
+
+        done();
+      },
+    ], next);
+  }
+  get(req, res, next) {
+
+    let { access, table } = this.collection;
+    let { accountableId, recordId } = req;
+    let properties;
+    let record;
+
+    Async.waterfall([
+      done => access.isAccountable(accountableId || -1, recordId, table, done),
+      (isAccountable, done) => {
+
+        properties = access.getProperties(isAccountable ? 'private' : 'public');
+        properties = properties.map(property => table[property]);
+        done();
+      },
+
+      done => table
+        .select(properties)
+        ::selectJoins(this.collection)
+        .where(table.id.equals(recordId))
+        .limit(1)
+        ::denormalizeExec(done),
+      ([foundRecord], done) => { record = foundRecord; done(); },
+
+      done => this.collection.executeHook('read', record, done),
+
+      done => {
+
+        let response = JSON.stringify(record);
+        res.writeHead(200, {
+          'Content-Type': 'application/json',
+          'Content-Length': response.length
+        });
+
+        done(null, response);
+      }
+    ], next);
+  }
+  patch(req, res, next) {
+
+    let { body, recordId } = req;
+    let patch = body;
+
+    Async.waterfall([
+      done => this.ensureAccountability(req, done),
+
+      done => this.collection.validator.checkObject(patch, {
+        collection: this.collection,
+        isPatch: true
+      }, done),
+      (errors, done) => {
+
+        if (errors.length > 0) {
+          let error = new Error('Patch failed validation');
+          error.statusCode = 400;
+          error.validationErrors = errors;
+          return done(error);
+        }
+
+        done();
+      },
+
+      done => this.collection.executeHook('update', patch, done),
+
+      done => this.collection.table.update(patch).exec(done),
+      (results, done) => {
+
+        res.writeHead(200, {
+          'Content-Type': 'application/json',
+          'Content-Length': 0
+        });
+        done();
+      }
+    ], next);
+  }
+  delete(req, res, next) {
+
+    let {table} = this.collection;
+    let {recordId} = req;
+
+    Async.waterfall([
+      done => this.ensureAccountability(req, done),
+
+      done => table
+        .delete()
+        .where(table.id.equals(recordId))
+        .exec(done),
+      (results, done) => {
+
+        res.writeHead(200, {
+          'Content-Type': 'application/json',
+          'Content-Length': 0
+        });
+        done();
+      }
+    ], next);
+  }
+}
+
+export default RecordEndpoint;
