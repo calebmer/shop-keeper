@@ -64,7 +64,7 @@ class Collection {
     if (!(join.collection instanceof Collection)) { throw new Error('Must join property to a collection'); }
 
     _.defaults(join, {
-      name: this.name,
+      name: join.collection.name,
       reverse: Pluralize(this.name)
     });
 
