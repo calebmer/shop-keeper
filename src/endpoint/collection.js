@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import Async from 'async';
 import Sql from 'sql';
-import Database, {LAST_ID} from '../database';
+import { LAST_ID, exec } from '../database';
 import { selectJoins, denormalizeExec } from '../query';
 import Endpoint from './endpoint';
 
@@ -44,19 +44,17 @@ class CollectionEndpoint extends Endpoint {
 
       done => this.collection.executeHook('create', record, done),
 
-      done => Database.exec(
+      done =>
         this.collection.table
-        .insert(record),
-        done
-      ),
+        .insert(record)
+        ::exec(done),
       (results, done) => done(),
 
-      done => Database.exec(
+      done =>
         this.collection.table
         .select(LAST_ID)
-        .limit(1),
-        done
-      ),
+        .limit(1)
+        ::exec(done),
       ([{lastId}], done) => {
 
         res.writeHead(201, {
@@ -99,12 +97,11 @@ class CollectionEndpoint extends Endpoint {
     });
 
     Async.waterfall([
-      done => Database.exec(
+      done =>
         table
         .select('COUNT(*) as count')
-        .where(req.constraint || '1 = 1'),
-        done
-      ),
+        .where(req.constraint || '1 = 1')
+        ::exec(done),
       ([{count}], done) => {
 
         let lastPage = count === 0 ? 0 : Math.ceil(count / limit) - 1;

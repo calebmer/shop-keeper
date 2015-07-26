@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import Database from './database';
+import {exec} from './database';
 import { CollectionEndpoint, RecordEndpoint } from './endpoint';
 
 export const RECORD_ID = Symbol('recordId');
@@ -30,18 +30,16 @@ class Router {
 
           endpoint.getRecordId = function (req, callback) {
 
-            Database.exec(
-              collection.table
-              .select(collection.table[join.property])
-              .where(collection.table.id.equals(req.recordId))
-              .limit(1),
-              (error, [record]) => {
+            collection.table
+            .select(collection.table[join.property])
+            .where(collection.table.id.equals(req.recordId))
+            .limit(1)
+            ::exec((error, [record]) => {
 
-                if (error) { return callback(error); }
-                if (!record) { return callback(_.extend(new Error('Base record could not be found'), { statusCode: 404 })); }
-                callback(null, record[join.property]);
-              }
-            );
+              if (error) { return callback(error); }
+              if (!record) { return callback(_.extend(new Error('Base record could not be found'), { statusCode: 404 })); }
+              callback(null, record[join.property]);
+            });
           };
 
           endpoint.delete = (req, res, next) =>

@@ -3,7 +3,7 @@ var ShopKeeper = require('../lib');
 var Api = ShopKeeper.Api;
 
 // Configure the database
-Api.database(Database.Sqlite);
+ShopKeeper.database(Database.Sqlite);
 
 // Create a new api instance
 var api = module.exports = new Api();

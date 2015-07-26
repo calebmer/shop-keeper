@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import Async from 'async';
-import Database from '../database';
+import {exec} from '../database';
 import { selectJoins, denormalizeExec } from '../query';
 import Endpoint from './endpoint';
 
@@ -21,13 +21,12 @@ class RecordEndpoint extends Endpoint {
         done();
       },
 
-      done => Database.exec(
+      done =>
         table
         .select(table.id)
         .where(table.id.equals(recordId))
-        .limit(1),
-        done
-      ),
+        .limit(1)
+        ::exec(done),
       ([record], done) => {
 
         if (!record) { return done(_.extend(new Error('Record not found'), { statusCode: 404 })); }
@@ -118,7 +117,7 @@ class RecordEndpoint extends Endpoint {
 
       done => this.collection.executeHook('update', patch, done),
 
-      done => Database.exec(this.collection.table.update(patch), done),
+      done => this.collection.table.update(patch)::exec(done),
       (results, done) => {
 
         res.writeHead(200, {
@@ -137,12 +136,11 @@ class RecordEndpoint extends Endpoint {
     Async.waterfall([
       done => this.ensureAccountability(req, done),
 
-      done => Database.exec(
+      done =>
         table
         .delete()
-        .where(table.id.equals(recordId)),
-        done
-      ),
+        .where(table.id.equals(recordId))
+        ::exec(done),
       (results, done) => {
 
         res.writeHead(200, {

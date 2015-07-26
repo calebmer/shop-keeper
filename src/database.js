@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Sql from 'sql';
 import Node from 'sql/lib/node';
 
@@ -6,7 +7,16 @@ export const LAST_ID = 'last_insert_rowid() as lastId';
 
 let Database = {};
 Database.executeQuery = (query, callback) => callback(new Error('Not implemented'));
-Database.exec = (node, callback) => Database.executeQuery(node.toQuery(), callback);
+
+Database.exec = function (node, callback) {
+
+  if (_.isFunction(node)) {
+    callback = node;
+    node = this;
+  }
+
+  Database.executeQuery(node.toQuery(), callback);
+};
 
 Database.setup = function ({ dialect, executeQuery }) {
 
@@ -15,3 +25,5 @@ Database.setup = function ({ dialect, executeQuery }) {
 };
 
 export default Database;
+export let exec = Database.exec;
+export let executeQuery = Database.exec;

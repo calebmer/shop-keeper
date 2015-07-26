@@ -15,4 +15,5 @@ export * from './endpoint';
 export {Api};
 import Database from './database';
 export let database = Database.setup;
+export let exec = Database.exec;
 export let executeQuery = Database.exec;
