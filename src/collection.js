@@ -17,6 +17,7 @@ class Collection {
     this.hooks = {};
 
     if (!table && columns) {
+      columns = columns.map(column => { name: column });
       table = {columns};
     }
 

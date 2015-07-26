@@ -69,7 +69,8 @@ class RecordEndpoint extends Endpoint {
         done();
       },
 
-      done => table
+      done =>
+        table
         .select(properties)
         ::selectJoins(this.collection)
         .where(table.id.equals(recordId))
