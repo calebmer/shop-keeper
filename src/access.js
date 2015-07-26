@@ -20,7 +20,7 @@ class Access {
 
     _.extend(this, rules);
   }
-  getProperties(level) {
+  getProperties(level = 'terse') {
 
     if (!_.contains(LEVELS, level)) { throw new Error(`'${level}' is not a valid level`); }
 
