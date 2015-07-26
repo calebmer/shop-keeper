@@ -15,11 +15,11 @@ class Collection {
 
     this.name = name;
     this.hooks = {};
-    this.validator = new Validator(validate);
+    this.validator = new Validator(validate || {});
     this.joins = [];
     (joins || []).forEach(::this.addJoin);
     access.terse.unshift('id');
-    this.access = new Access(access);
+    this.access = new Access(access || {});
 
     if (options.id) {
       table.columns.unshift({
