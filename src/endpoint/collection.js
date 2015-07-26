@@ -115,7 +115,8 @@ class CollectionEndpoint extends Endpoint {
         done();
       },
 
-      done => table
+      done =>
+        table
         .select(access.getProperties('terse').map(property => table[property]))
         .where(req.constraint || '1 = 1')
         ::selectJoins(this.collection)

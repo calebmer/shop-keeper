@@ -16,8 +16,11 @@ class Collection {
     this.name = name;
     this.hooks = {};
 
-    if (!table && columns) {
-      table = {columns};
+    if (!table) { table = {}; }
+
+    if (columns) {
+      table.columns =
+        (table.columns || []).concat(columns.map(column => ({ name: column })));
     }
 
     if (options.id) {
