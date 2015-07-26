@@ -7,6 +7,7 @@
 ## Optimizations
 - Remove globals in tests, it effects the source code's execution
 - Remove `ifNotExists()` from table creation in `demo/migrate/setup` and refactor tests that require a db setup to also perform a db teardown
+- `query.js` refactor
 
 ## Possible Enhancements
 - Find a better way to define `Api.getAccountableId`?
