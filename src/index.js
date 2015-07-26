@@ -12,5 +12,7 @@ export * from './collection';
 export * from './endpoint';
 
 // For people not using ES next
-export let database = Api.database;
-export {default as Api} from './api';
+export {Api};
+import Database from './database';
+export let database = Database.setup;
+export let executeQuery = Database.exec;

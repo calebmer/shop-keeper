@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import Async from 'async';
+import Database from '../database';
 import { selectJoins, denormalizeExec } from '../query';
 import Endpoint from './endpoint';
 
@@ -20,17 +21,19 @@ class RecordEndpoint extends Endpoint {
         done();
       },
 
-      done => table
+      done => Database.exec(
+        table
         .select(table.id)
         .where(table.id.equals(recordId))
-        .limit(1)
-        .exec((error, [record]) => {
+        .limit(1),
+        done
+      ),
+      ([record], done) => {
 
-          if (error) { return done(error); }
-          if (!record) { return done(_.extend(new Error('Record not found'), { statusCode: 404 })); }
-          // TODO: res.writeHead({ 'Record-Id': recordId });
-          done();
-        })
+        if (!record) { return done(_.extend(new Error('Record not found'), { statusCode: 404 })); }
+        // TODO: res.writeHead({ 'Record-Id': recordId });
+        done();
+      }
     ], next);
   }
   ensureAccountability(req, next) {
@@ -114,7 +117,7 @@ class RecordEndpoint extends Endpoint {
 
       done => this.collection.executeHook('update', patch, done),
 
-      done => this.collection.table.update(patch).exec(done),
+      done => Database.exec(this.collection.table.update(patch), done),
       (results, done) => {
 
         res.writeHead(200, {
@@ -133,10 +136,12 @@ class RecordEndpoint extends Endpoint {
     Async.waterfall([
       done => this.ensureAccountability(req, done),
 
-      done => table
+      done => Database.exec(
+        table
         .delete()
-        .where(table.id.equals(recordId))
-        .exec(done),
+        .where(table.id.equals(recordId)),
+        done
+      ),
       (results, done) => {
 
         res.writeHead(200, {

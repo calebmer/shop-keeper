@@ -1,5 +1,5 @@
 var Async = require('async');
-var Database = require('../../lib/database');
+var ShopKeeper = require('../../lib');
 var Models = require('../models');
 
 // Drops all of the tables
@@ -10,6 +10,6 @@ module.exports = function (callback) {
     var model = Models[name];
 
     // The `sql` module table can be found at `#table`
-    model.table.drop().exec(next);
+    ShopKeeper.Database.exec(model.table.drop(), next);
   }, callback);
 };

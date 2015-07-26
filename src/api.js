@@ -4,11 +4,6 @@ import Collection from './collection';
 import {middleware} from './middleware';
 
 class Api {
-  static database({ dialect, executeQuery }) {
-
-    Database.setDialect(dialect);
-    Database.executeQuery = executeQuery;
-  }
   constructor() {
 
     this.collections = new Map();
@@ -64,5 +59,7 @@ class Api {
   // TODO: `express`/`restify` support
   // inject(server) {}
 }
+
+Api.database = ::Database.setup;
 
 export default Api;

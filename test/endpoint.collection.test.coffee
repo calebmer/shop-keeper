@@ -1,6 +1,7 @@
 Async = require 'async'
-Request = require './lib/request'
+ShopKeeper = require '../lib'
 Person = require '../demo/models/person'
+Request = require './lib/request'
 
 describe 'a collection endpoint', ->
   before require './lib/setup'
@@ -48,11 +49,11 @@ describe 'a collection endpoint', ->
       .expect 201
       .end (e, res) ->
         return done e if e?
-        Person.table
+        query = Person.table
         .select 'password'
         .where id: parseInt res.headers['record-id']
         .limit 1
-        .exec (e, results) ->
+        ShopKeeper.executeQuery query, (e, results) ->
           return done e if e?
           results[0].password.should.be.exactly 'PASSWORD!'
           done()

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import Database from './database';
 import { sendToTop, sendToBottom } from './utils';
 
 const LEVELS = ['terse', 'public', 'private'];
@@ -54,13 +55,15 @@ class Access {
       return where;
     })()));
 
-    query
-    .limit(1)
-    .exec((error, [record]) => {
+    Database.exec(
+      query
+      .limit(1),
+      (error, [record]) => {
 
-      if (error) { return callback(error); }
-      callback(null, record ? (true) : false);
-    });
+        if (error) { return callback(error); }
+        callback(null, record ? (true) : false);
+      }
+    );
   }
 }
 

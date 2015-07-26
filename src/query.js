@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import Database from './database';
 
 let internals = {};
 
@@ -37,7 +38,7 @@ export function selectJoins(collection) {
 
 export function denormalizeExec(callback) {
 
-  return this.exec((error, records) => callback(error, records ?
+  return Database.exec(this, (error, records) => callback(error, records ?
     records.map(record => {
 
       let newRecord = {};
