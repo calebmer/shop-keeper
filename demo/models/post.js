@@ -8,8 +8,8 @@ var Post = module.exports = Api.define({
   name: 'post',
   access: {
     accountable: 'authorId',
-    terse: ['headline', 'authorId', 'createdAt'],
-    public: ['updatedAt']
+    terse: ['headline', 'authorId'],
+    public: ['createdAt', 'updatedAt']
   },
   validate: {
     headline: [v.isType('string'), v.required(), v.minLength(4), v.maxLength(256)],

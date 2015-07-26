@@ -91,9 +91,10 @@ class CollectionEndpoint extends Endpoint {
         orderItem = orderItem.substr(1);
         direction = 'desc';
       }
-      if (!_.contains(access.getProperties('terse'), orderItem)) {
-        throw new Error(`Cannot sort by '${orderItem}' property`);
-      }
+      // TODO: find a different limiter?
+      // if (!_.contains(access.getProperties('terse'), orderItem)) {
+      //   throw new Error(`Cannot sort by '${orderItem}' property`);
+      // }
       return table[orderItem][direction];
     });
 
