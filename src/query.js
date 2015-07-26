@@ -8,7 +8,7 @@ internals.selectJoins = _.memoize(collection => {
 
   let { table, joins } = collection;
   let select = [];
-  let froms = [];
+  let froom;
 
   joins.forEach(({ collection: joinCollection, ...join }) => {
 
@@ -21,19 +21,20 @@ internals.selectJoins = _.memoize(collection => {
     select = select.concat(joinAccess.getProperties('terse')
       .map(property => joinTable[property].as(`${join.name}.${property}`)));
 
-    froms.push(
-      table.leftJoin(joinTable)
-      .on(table[join.property].equals(joinTable.id))
-    );
+    froom =
+    (froom ? froom : table).leftJoin(joinTable)
+    .on(table[join.property].equals(joinTable.id));
   });
 
-  return { select, froms };
+  return { select, froom };
 }, collection => collection.name);
 
 export function selectJoins(collection) {
 
-  let { select, froms } = internals.selectJoins(collection);
-  return this.select(select).from(froms);
+  let { select, froom } = internals.selectJoins(collection);
+  let query = this.select(select);
+  if (froom) { query.from(froom); }
+  return query;
 }
 
 export function denormalizeExec(callback) {
