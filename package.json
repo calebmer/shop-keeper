@@ -1,6 +1,6 @@
 {
   "name": "shop-keeper",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "description": "The API logic should be the least of your concerns, focus on your data and your front end",
   "author": "Caleb Meredith <calebmeredith8@gmail.com> (http://calebmer.github.io)",
   "license": "MIT",
@@ -23,7 +23,7 @@
   "dependencies": {
     "async": "^1.4.0",
     "body-parser": "^1.13.2",
-    "data-guard": "^1.1.0",
+    "data-guard": "^1.1.2",
     "lodash": "^3.10.0",
     "pluralize": "^1.1.2",
     "sql": "^0.55.0"
