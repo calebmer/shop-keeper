@@ -135,6 +135,8 @@ class RecordEndpoint extends Endpoint {
     Async.waterfall([
       done => this.ensureAccountability(req, done),
 
+      done => this.collection.executeHook('delete', { id: recordId }, done),
+
       done =>
         table
         .select(table.star())
