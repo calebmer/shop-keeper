@@ -117,7 +117,7 @@ class CollectionEndpoint extends Endpoint {
         table
         .select(access.getProperties('terse').map(property => table[property]))
         .where(req.constraint || '1 = 1')
-        ::selectJoins(this.collection)
+        ::selectJoins(this.collection, 'terse')
         .order(order)
         .limit(limit)
         .offset(limit * page)

@@ -56,22 +56,21 @@ class RecordEndpoint extends Endpoint {
 
     let { access, table } = this.collection;
     let { accountableId, recordId } = req;
-    let properties;
+    let level = 'public';
     let record;
 
     Async.waterfall([
       done => access.isAccountable(accountableId || -1, recordId, table, done),
       (isAccountable, done) => {
 
-        properties = access.getProperties(isAccountable ? 'private' : 'public');
-        properties = properties.map(property => table[property]);
+        level = isAccountable ? 'private' : 'public';
         done();
       },
 
       done =>
         table
-        .select(properties)
-        ::selectJoins(this.collection)
+        .select(access.getProperties(level).map(property => table[property]))
+        ::selectJoins(this.collection, level)
         .where(table.id.equals(recordId))
         .limit(1)
         ::denormalizeExec(done),
