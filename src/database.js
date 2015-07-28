@@ -6,7 +6,7 @@ import Node from 'sql/lib/node';
 export const LAST_ID = 'last_insert_rowid() as lastId';
 
 let Database = {};
-Database.executeQuery = (query, callback) => callback(new Error('Not implemented'));
+Database.executeQuery = (query, callback) => callback(new Error('Execute query function not implemented'));
 
 Database.exec = function (node, callback) {
 

@@ -30,7 +30,9 @@ class CollectionEndpoint extends Endpoint {
 
     if (accountableId && accountables.length === 1) {
       let [accountable] = accountables;
-      record[accountable] = accountableId;
+      if (accountable !== 'id') {
+        record[accountable] = accountableId;
+      }
     }
 
     Async.waterfall([
