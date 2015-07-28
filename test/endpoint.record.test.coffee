@@ -53,7 +53,7 @@ describe 'a record endpoint', ->
 
     it 'can return the private form of an object with credentials', (done) ->
       Request()
-      .get '/person/2'
+      .get '/person/2?accountable=2'
       .expect 200
       .end (e, res) ->
         return done e if e?
@@ -79,7 +79,7 @@ describe 'a record endpoint', ->
 
     it 'will patch a document', (done) ->
       Request()
-      .patch '/person/2'
+      .patch '/person/2?accountable=2'
       .send givenName: 'Jon'
       .expect 200
       .end (e) ->
@@ -94,7 +94,7 @@ describe 'a record endpoint', ->
 
     it 'will validate before update', (done) ->
       Request()
-      .patch '/person/2'
+      .patch '/person/2?accountable=2'
       .send
         familyName: 'A'
         email: 'sara.smith@email.com'
@@ -116,13 +116,13 @@ describe 'a record endpoint', ->
     describe 'delete method', ->
       it 'requires authorization', (done) ->
         Request()
-        .delete '/post/2'
+        .delete '/post/1'
         .expect 401
         .end done
 
       it 'will delete a document', (done) ->
         Request()
-        .delete '/post/1'
+        .delete '/post/1?accountable=2'
         .expect 200
         .end (e) ->
           return done e if e?

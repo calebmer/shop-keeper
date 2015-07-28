@@ -11,5 +11,5 @@ var api = module.exports = new Api();
 // Override `api`'s default `getAccountable` method
 api.getAccountable = function (req, done) {
 
-  done(null, 2);
+  done(null, req.query.accountable);
 };

@@ -42,7 +42,7 @@ describe 'the routes', ->
 
   it 'can update from a forward join', (done) ->
     Request()
-    .patch '/post/3/author'
+    .patch '/post/3/author?accountable=2'
     .send givenName: 'Johnny'
     .expect 200
     .end (e, res) ->

@@ -23,9 +23,15 @@ class CollectionEndpoint extends Endpoint {
   }
   post(req, res, next) {
 
-    let {body} = req;
+    let { body, accountableId } = req;
     let record = body;
     _.extend(record, req.constraint);
+    let accountables = this.collection.access.accountable;
+
+    if (accountableId && accountables.length === 1) {
+      let [accountable] = accountables;
+      record[accountable] = accountableId;
+    }
 
     Async.waterfall([
       done => this.collection.validator.checkObject(record, {
