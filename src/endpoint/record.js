@@ -116,7 +116,11 @@ class RecordEndpoint extends Endpoint {
 
       done => this.collection.executeHook('update', patch, done),
 
-      done => this.collection.table.update(patch)::exec(done),
+      done =>
+        this.collection.table
+        .update(patch)
+        .where(this.collection.table.id.equals(recordId))
+        ::exec(done),
       (results, done) => {
 
         res.writeHead(200, {
