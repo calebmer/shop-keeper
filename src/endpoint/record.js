@@ -30,7 +30,7 @@ class RecordEndpoint extends Endpoint {
       ([record], done) => {
 
         if (!record) { return done(_.extend(new Error('Record not found'), { statusCode: 404 })); }
-        // TODO: res.writeHead({ 'Record-Id': recordId });
+        res.setHeader('Record-Id', recordId);
         done();
       }
     ], next);
@@ -64,6 +64,7 @@ class RecordEndpoint extends Endpoint {
       (isAccountable, done) => {
 
         level = isAccountable ? 'private' : 'public';
+        res.setHeader('Record-Accountable', isAccountable ? 1 : 0);
         done();
       },
 
@@ -85,7 +86,6 @@ class RecordEndpoint extends Endpoint {
           'Content-Type': 'application/json',
           'Content-Length': response.length
         });
-
         done(null, response);
       }
     ], next);

@@ -23,17 +23,17 @@ class Api {
     return collection;
   }
   // `connect`/`express` support
-  middleware(httpMode = false) {
+  middleware() {
 
     this.router.buildTable(this.collections);
-    return (this)::(middleware(httpMode));
+    return (this)::middleware;
   }
   // `http` support
   requestListener() {
 
     return (req, res) => {
 
-      this.middleware(true)(req, res, error => {
+      this.middleware()(req, res, error => {
 
         if (!error) {
           error = new Error('Not found');

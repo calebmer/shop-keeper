@@ -9,12 +9,12 @@ describe 'a record endpoint', ->
     .expect 404
     .end done
 
-  it 'will expose a record id header'#, (done) ->
-    # Request()
-    # .head '/person/1'
-    # .expect 200
-    # .expect 'Record-Id', 1
-    # .end done
+  it 'will expose a record id header', (done) ->
+    Request()
+    .head '/person/1'
+    .expect 200
+    .expect 'Record-Id', 1
+    .end done
 
   describe 'get method', ->
     it 'will return an object', (done) ->
@@ -37,6 +37,19 @@ describe 'a record endpoint', ->
         res.body.should.have.property 'familyName'
         res.body.should.not.have.property 'email'
         done()
+
+    it 'will expose a header negotiating accountability', (done) ->
+      Request()
+      .get '/person/1'
+      .expect 200
+      .expect 'Record-Accountable', 0
+      .end (e) ->
+        return done e if e?
+        Request()
+        .get '/person/1?accountable=1'
+        .expect 200
+        .expect 'Record-Accountable', 1
+        .end done
 
     it 'will denormalize the data', (done) ->
       Request()
@@ -113,20 +126,20 @@ describe 'a record endpoint', ->
           res.body.should.not.have.property 'lalala'
           done()
 
-    describe 'delete method', ->
-      it 'requires authorization', (done) ->
-        Request()
-        .delete '/post/1'
-        .expect 401
-        .end done
+  describe 'delete method', ->
+    it 'requires authorization', (done) ->
+      Request()
+      .delete '/post/1'
+      .expect 401
+      .end done
 
-      it 'will delete a document', (done) ->
+    it 'will delete a document', (done) ->
+      Request()
+      .delete '/post/1?accountable=2'
+      .expect 200
+      .end (e) ->
+        return done e if e?
         Request()
-        .delete '/post/1?accountable=2'
-        .expect 200
-        .end (e) ->
-          return done e if e?
-          Request()
-          .get '/post/1'
-          .expect 404
-          .end done
+        .get '/post/1'
+        .expect 404
+        .end done

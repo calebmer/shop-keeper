@@ -71,7 +71,6 @@ class CollectionEndpoint extends Endpoint {
           'Accepts': 'application/json',
           'Record-Id': lastId
         });
-
         done();
       }
     ], next);
