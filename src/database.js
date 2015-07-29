@@ -12,8 +12,10 @@ Database.exec = function (node, callback) {
 
   if (_.isFunction(node)) {
     callback = node;
-    node = this;
+    node = null;
   }
+
+  if (!node) { node = this; }
 
   Database.executeQuery(node.toQuery(), callback);
 };
