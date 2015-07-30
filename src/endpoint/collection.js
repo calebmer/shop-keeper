@@ -103,6 +103,7 @@ class CollectionEndpoint extends Endpoint {
     _.each(query, (value, key) => {
 
       if (where[key]) { return; }
+      if (!table[key]) { return; }
       where[key] = value;
     });
 
