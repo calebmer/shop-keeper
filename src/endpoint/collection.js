@@ -78,7 +78,7 @@ class CollectionEndpoint extends Endpoint {
   get(req, res, next) {
 
     let { table, access } = this.collection;
-    let { limit, page, order } = req.query;
+    let { limit, page, order, ...query } = req.query;
 
     limit = parseInt(limit) || 16;
 
@@ -96,18 +96,23 @@ class CollectionEndpoint extends Endpoint {
         orderItem = orderItem.substr(1);
         direction = 'desc';
       }
-      // TODO: find a different limiter?
-      // if (!_.contains(access.getProperties('terse'), orderItem)) {
-      //   throw new Error(`Cannot sort by '${orderItem}' property`);
-      // }
       return table[orderItem][direction];
     });
+
+    let where = req.constraint || {};
+    _.each(query, (value, key) => {
+
+      if (where[key]) { return; }
+      where[key] = value;
+    });
+
+    if (Object.keys(where).length === 0) { where = '1 = 1'; }
 
     Async.waterfall([
       done =>
         table
         .select('COUNT(*) as count')
-        .where(req.constraint || '1 = 1')
+        .where(where)
         ::exec(done),
       ([{count}], done) => {
 
@@ -123,7 +128,7 @@ class CollectionEndpoint extends Endpoint {
       done =>
         table
         .select(access.getProperties('terse').map(property => table[property]))
-        .where(req.constraint || '1 = 1')
+        .where(where)
         ::selectJoins(this.collection, 'terse')
         .order(order)
         .limit(limit)

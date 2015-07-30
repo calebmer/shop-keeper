@@ -145,3 +145,12 @@ describe 'a collection endpoint', ->
     it 'exposes navigation links in header'
     it 'is ordered by `createdAt`'
     it 'can be ordered by anything'
+
+    it 'will filter the data', (done) ->
+      Request()
+      .get '/post?limit=100&authorId=2'
+      .expect 200
+      .end (e, res) ->
+        return done e if e?
+        res.body.length.should.be.exactly 17
+        done()
