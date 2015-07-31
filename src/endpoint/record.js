@@ -74,7 +74,7 @@ class RecordEndpoint extends Endpoint {
         ::selectJoins(this.collection, level)
         .where(table.id.equals(recordId))
         .limit(1)
-        ::denormalizeExec(done),
+        ::denormalizeExec(this.collection, done),
       ([foundRecord], done) => { record = foundRecord; done(); },
 
       done => this.collection.executeHook('read', record, done),

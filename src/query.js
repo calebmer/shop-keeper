@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import Async from 'async';
 import {exec} from './database';
 
 export function selectJoins(collection, level = 'terse') {
@@ -16,8 +17,9 @@ export function selectJoins(collection, level = 'terse') {
     let { access: joinAccess, table: joinTable } = joinCollection;
     joinTable = joinTable.as(join.name);
 
-    select = select.concat(joinAccess.getProperties('terse')
-      .map(property => joinTable[property].as(`${join.name}.${property}`)));
+    select = select.concat(joinAccess.getProperties('terse').map(property =>
+      joinTable[property].as(`${join.name}.${property}`)
+    ));
 
     froom =
     (froom ? froom : table).leftJoin(joinTable)
@@ -30,14 +32,31 @@ export function selectJoins(collection, level = 'terse') {
   return query;
 }
 
-export function denormalizeExec(callback) {
+export function denormalizeExec(collection, callback) {
 
-  return (this)::exec((error, records) => callback(error, records ?
-    records.map(record => {
+  let {joins} = collection;
 
-      let newRecord = {};
-      _.each(record, (value, key) => _.set(newRecord, key, value));
-      return newRecord;
-    })
-  : null));
+  Async.waterfall([
+    done => (this)::exec(done),
+    (records, done) => {
+
+      Async.map(records, (record, nextMap) => {
+
+        let newRecord = {};
+        _.each(record, (value, key) => _.set(newRecord, key, value));
+
+        Async.each(joins, (join, nextEach) => {
+
+          let { name, collection: joinCollection } = join;
+          if (!newRecord[name]) { return nextEach(); }
+
+          joinCollection.executeHook('read', newRecord[name], nextEach);
+        }, error => {
+
+          if (error) { return nextMap(error); }
+          nextMap(null, newRecord);
+        });
+      }, done);
+    }
+  ], callback);
 }

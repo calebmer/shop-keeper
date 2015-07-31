@@ -136,7 +136,7 @@ class CollectionEndpoint extends Endpoint {
         .order(order)
         .limit(limit)
         .offset(limit * page)
-        ::denormalizeExec(done),
+        ::denormalizeExec(this.collection, done),
       (result, done) => {
 
         records = result;
