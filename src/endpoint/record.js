@@ -139,6 +139,7 @@ class RecordEndpoint extends Endpoint {
     Async.waterfall([
       done => this.ensureAccountability(req, done),
 
+      // TODO: consider not selecting everything for the delete hook?
       done =>
         table
         .select(table.star())

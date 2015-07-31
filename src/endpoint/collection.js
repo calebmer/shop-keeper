@@ -79,6 +79,7 @@ class CollectionEndpoint extends Endpoint {
 
     let { table, access } = this.collection;
     let { limit, page, order, ...query } = req.query;
+    let records;
 
     limit = parseInt(limit) || 16;
 
@@ -136,7 +137,13 @@ class CollectionEndpoint extends Endpoint {
         .limit(limit)
         .offset(limit * page)
         ::denormalizeExec(done),
-      (records, done) => {
+      (result, done) => {
+
+        records = result;
+        Async.each(records, _.partial(::this.collection.executeHook, 'read'), done);
+      },
+
+      done => {
 
         let response = JSON.stringify(records);
         res.writeHead(200, {
