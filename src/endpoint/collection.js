@@ -118,11 +118,12 @@ class CollectionEndpoint extends Endpoint {
         ::exec(done),
       ([{count}], done) => {
 
-        res.setHeader('Record-Count', count);
         let lastPage = count === 0 ? 0 : Math.ceil(count / limit) - 1;
         if (page < 0) { page += lastPage + 1; }
         if (page < 0) { page = 0; }
         if (page > lastPage) { page = lastPage; }
+        res.setHeader('Record-Count', count);
+        res.setHeader('Record-Page', page);
 
         done();
       },
