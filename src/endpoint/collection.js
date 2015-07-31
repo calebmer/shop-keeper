@@ -121,9 +121,8 @@ class CollectionEndpoint extends Endpoint {
         res.setHeader('Record-Count', count);
         let lastPage = count === 0 ? 0 : Math.ceil(count / limit) - 1;
         if (page < 0) { page += lastPage + 1; }
-        if (page < 0 || page > lastPage) {
-          return done(_.extend(new Error('Page out of range'), { statusCode: 400 }));
-        }
+        if (page < 0) { page = 0; }
+        if (page > lastPage) { page = lastPage; }
 
         done();
       },
