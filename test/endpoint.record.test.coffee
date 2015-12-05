@@ -1,7 +1,7 @@
-Request = require './lib/request'
+Request = require './utils/request'
 
 describe 'a record endpoint', ->
-  before require './lib/setup'
+  before require './utils/setup'
 
   it 'will not find a record that does not exist', (done) ->
     Request()

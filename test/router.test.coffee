@@ -1,8 +1,8 @@
-Request = require './lib/request'
+Request = require './utils/request'
 
 # TODO: consider unit testing the actual `Router` and `Api` objects
 describe 'the routes', ->
-  before require './lib/setup'
+  before require './utils/setup'
 
   it 'will not find things that do not exist', (done) ->
     Request()

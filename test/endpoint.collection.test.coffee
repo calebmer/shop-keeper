@@ -1,10 +1,10 @@
 Async = require 'async'
 ShopKeeper = require '../lib'
 Person = require '../demo/models/person'
-Request = require './lib/request'
+Request = require './utils/request'
 
 describe 'a collection endpoint', ->
-  before require './lib/setup'
+  before require './utils/setup'
 
   describe 'post method', ->
     it 'only accepts json', (done) ->
