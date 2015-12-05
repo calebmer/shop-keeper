@@ -39,7 +39,7 @@ require('./models');
 //
 //   res.writeHead(statusCode, {
 //     'Content-Type': 'application/json',
-//     'Content-Length': result.length
+//     'Content-Length': Buffer.byteLength(result)
 //   });
 //
 //   res.end(result);

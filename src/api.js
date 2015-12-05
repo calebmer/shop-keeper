@@ -50,7 +50,7 @@ class Api {
 
         res.writeHead(statusCode, {
           'Content-Type': 'application/json',
-          'Content-Length': response.length
+          'Content-Length': Buffer.byteLength(response)
         });
         res.end(response);
       });

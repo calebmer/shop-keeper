@@ -148,7 +148,7 @@ class CollectionEndpoint extends Endpoint {
         let response = JSON.stringify(records);
         res.writeHead(200, {
           'Content-Type': 'application/json',
-          'Content-Length': response.length
+          'Content-Length': Buffer.byteLength(response)
         });
 
         done(null, response);
