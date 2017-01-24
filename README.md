@@ -1,4 +1,6 @@
 # ShopKeeper
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/calebmer/shop-keeper.svg)](https://greenkeeper.io/)
 For any team, the benefit of having an API power your application is *huge*. But a good API is hard to build. I mean really hard. The ShopKeeper framework intends to make the API building process much easier. The API logic should be the least of your concerns, focus on your data and your front end.
 
 ## Documentation—WIP
